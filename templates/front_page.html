@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>A Day in the Life of Brad</h2>
+
+<a href="/newpost">Click here to submit a new blog entry.</a>
+
+<p class="error">{{ error if error else "" }}</p>
+{% endblock %}
