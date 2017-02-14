@@ -1,12 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>A Day in the Life of Brad</h2>
 
-movie = Movie(title = new_movie_title_escaped)
-        movie.put()
-        
-<a href="/newpost">Click here to submit a new blog entry.</a>
+<p>Thanks! Your entry has been added</p>
+
+<br>
+<br>
+<br>
+{% for blog in blogs %}
+    <p>
+        <label>Title:
+        {{ blog.title }}
+        </label>
+        <br>
+        <label>Date:
+        {{ blog.created }}
+        </label>
+        <br>
+        <br>
+        <label>Entry:
+        {{ blog.blog_entry }}
+        </label>
+    </p>
+<br>
+<br>
+
+{% endfor %}
+
+<form action="/all">
+    <input type="submit" value="See All"/>
+</form>
 
 <p class="error">{{ error if error else "" }}</p>
+
 {% endblock %}

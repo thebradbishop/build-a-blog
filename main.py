@@ -6,7 +6,7 @@ import os
 from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir))
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
 class Blog(db.Model):
     title = db.StringProperty(required = True)
@@ -27,31 +27,32 @@ class Handler(webapp2.RequestHandler):
 
 class MainHandler(Handler):
     def get(self):
-        unread_blog = db.GqlQuery("SELECT * FROM Blog where read = False ORDER BY created ASC")
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
         t = jinja_env.get_template("front_page.html")
-        content = t.render(
-                        blog = unread_blog,
-                        error = self.request.get("error"))
+        content = t.render(blogs=blogs)
         self.response.write(content)
 
 class RecentBlogs(Handler):
     def get(self):
-        unread_blog = db.GqlQuery("SELECT * FROM Blog ORDER BY created ASC")
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
         t = jinja_env.get_template("front_page.html")
-        content = t.render(
-                        blog = unread_blog,
-                        error = self.request.get("error"))
+        content = t.render(blogs=blogs)
         self.response.write(content)
 
 class AddEntry(Handler):
     def post(self):
         entry_title = self.request.get("title")
         entry_blog = self.request.get("new-entry")
-        title = Blog(title = entry_title)
-        blog = Blog(blog_entry = entry_blog)
-        blog.put()
+        if entry_title == '':
+            error = "error"
+            self.redirect("/newpost?error=" + entry_title)
 
-        t = jinja_env.get_template("entryadded.html")
+        if entry_title and entry_blog:
+            b = Blog(title=entry_title, blog_entry=entry_blog)
+            b.put()
+
+        #blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created ASC LIMIT 5")
+        t = jinja_env.get_template("front_page.html")
         content = t.render()
         self.response.write(content)
 
@@ -61,9 +62,17 @@ class NewPost(Handler):
         content = t.render()
         self.response.write(content)
 
+class AllBlogs(Handler):
+    def get(self):
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc")
+        t = jinja_env.get_template("front_page.html")
+        content = t.render(blogs = blogs)
+        self.response.write(content)
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/newpost', NewPost),
     ('/add', AddEntry),
-    ('/blog', RecentBlogs)
+    ('/blog', RecentBlogs),
+    ('/all', AllBlogs)
 ], debug=True)

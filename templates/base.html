@@ -6,9 +6,29 @@
             .error {
                 color: red;
             }
+
+            body {
+                background-color: lightgray;
+                margin: 50px 150px 100px 100px;
+            }
         </style>
     </head>
     <body>
+        <div align="center">
+            <h1>
+                <style>
+                a:link    {color:black; background-color:transparent; text-decoration:none}
+                a:visited {color:purple; background-color:transparent; text-decoration:none}
+                a:hover   {color:pink; background-color:transparent; text-decoration:none}
+                a:active  {color:purple; background-color:transparent; text-decoration:underline}
+                </style>
+                    <a href='/'>A Day in the Life of Brad</a>
+            </h1>
+            <a href="/blog">Recent Blogs</a>
+            <a href="/newpost">New Entry</a>
+        </div>
+
+
 
         {% block content %}
         {% endblock %}
