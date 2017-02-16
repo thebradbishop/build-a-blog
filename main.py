@@ -52,7 +52,7 @@ class AddEntry(Handler):
             b = Blog(title=title, entry_blog=entry_blog)
             b.put()
 
-        self.redirect("/RecentBlogs")
+        self.redirect("/blog")
 
 class NewPost(Handler):
     def get(self):
