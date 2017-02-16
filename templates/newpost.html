@@ -2,23 +2,28 @@
 
 {% block content %}
 
+<style>
+.error {
+    color: red;
+}
+</style>
+
 <br>
 <br>
 <br>
 <br>
-<form action="/add" method="post">
+<form action="/newpost" method="post">
     <label>
         Title:
-        <input type="text" name="title" value="{{ title }}">
+        <input type="text" name="title" value="{{ title }}"> <text class="error">{{ error_title if error_title else "" }}</text>
+        <br>
+    </label>
+        Add a new blog entry:
+        <input type="text" name="entry_blog" value="{{ entry_blog }}" size="50px" /> <text class="error">{{ error_entry if error_entry else "" }}</text>
     </label>
     <br>
-        Add a new blog entry:
-        <input type="text" name="entry_blog" value="{{ entry_blog }}" size="50px" />
-    </label>
     <br>
     <input type="submit" value="Add it to My Blog"/>
 </form>
-
-<p class="error">{{ error if error else "" }}</p>
 
 {% endblock %}
