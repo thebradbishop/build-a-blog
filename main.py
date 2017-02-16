@@ -10,7 +10,7 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), a
 
 class Blog(db.Model):
     title = db.StringProperty(required = True)
-    blog_entry = db.StringProperty(required = True)
+    entry_blog = db.StringProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
     read = db.BooleanProperty(required = True, default = False)
 
@@ -52,10 +52,7 @@ class AddEntry(Handler):
             b = Blog(title=title, entry_blog=entry_blog)
             b.put()
 
-        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
-        t = jinja_env.get_template("front_page.html")
-        content = t.render(blogs=blogs)
-        self.response.write(content)
+        self.redirect("/RecentBlogs")
 
 class NewPost(Handler):
     def get(self):
