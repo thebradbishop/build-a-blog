@@ -43,17 +43,18 @@ class AddEntry(Handler):
     def post(self):
         entry_title = self.request.get("title")
         entry_blog = self.request.get("new-entry")
-        if entry_title == '':
-            error = "error"
-            self.redirect("/newpost?error=" + entry_title)
+        if entry_title or entry_blog == "":
+            t = jinja_env.get_template("front_page.html")
+            content = t.render(title=entry_title)
+            self.redirect("/newpost")
 
         if entry_title and entry_blog:
             b = Blog(title=entry_title, blog_entry=entry_blog)
             b.put()
 
-        #blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created ASC LIMIT 5")
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
         t = jinja_env.get_template("front_page.html")
-        content = t.render()
+        content = t.render(blogs=blogs)
         self.response.write(content)
 
 class NewPost(Handler):
@@ -66,7 +67,7 @@ class AllBlogs(Handler):
     def get(self):
         blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc")
         t = jinja_env.get_template("front_page.html")
-        content = t.render(blogs = blogs)
+        content = t.render(blogs=blogs)
         self.response.write(content)
 
 app = webapp2.WSGIApplication([

@@ -9,11 +9,11 @@
 <form action="/add" method="post">
     <label>
         Title:
-        <input type="text" name="title" value="" required/>
+        <input type="text" name="title" value="{{ entry_title }}" >
     </label>
     <br>
         Add a new blog entry:
-        <input type="text" name="new-entry" size="50px" required/>
+        <input type="text" name="new-entry" size="50px" />
     </label>
     <br>
     <input type="submit" value="Add it to My Blog"/>
