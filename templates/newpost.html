@@ -2,20 +2,18 @@
 
 {% block content %}
 
-<style>
-.error {
-    color: red;
-}
 </style>
 
 <br>
 <br>
 <br>
 <br>
-<form action="/newpost" method="post">
+<form action="/newpost" method="post" class="add_blog">
     <label>
+        <br>
         Title:
         <input type="text" name="title" value="{{ title }}"> <text class="error">{{ error_title if error_title else "" }}</text>
+        <br>
         <br>
     </label>
         Add a new blog entry:

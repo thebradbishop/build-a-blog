@@ -6,7 +6,7 @@
 <br>
 <br>
 {% for blog in blogs %}
-    <p>
+    <p class="blog">
         <label>Title:
         {{ blog.title }}
         </label>
@@ -25,7 +25,7 @@
 
 {% endfor %}
 
-<form action="/all">
+<form action="/all" class="blog_button">
     <input type="submit" value="See All"/>
 </form>
 
