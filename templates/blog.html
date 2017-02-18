@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
 .error {
     color: pink;
 }
@@ -47,25 +51,55 @@ body {
 }
 
 a:link {
-    color: #79DDE5;
+    color: #4e5965;
     background-color: transparent;
     text-decoration: none
 }
 
 a:visited {
-    color: #79DDE5;
+    color: #4e5965;
     background-color: transparent;
     text-decoration: none
 }
 
 a:hover {
-    color: #D6F4F7;
+    color: pink;
     background-color: transparent;
     text-decoration: none
 }
 
 a:active {
-    color: #79DDE5;
+    color: #4e5965;
     background-color: transparent;
-    text-decoration: none;
+    text-decoration: underline
 }
+</style>
+
+<br>
+<br>
+<br>
+{% if blogs: %}
+    <p class="blog_entry">
+        <label>Title:
+        <a href={{ bloglink }}>{{ blog.title }}</a>
+        </label>
+        <br>
+        <label>Date:
+        {{ blog.created }}
+        </label>
+        <br>
+        <br>
+        <label>
+        {{ blog.entry_blog }}
+        </label>
+    </p>
+<br>
+<br>
+
+{% endif %}
+
+<form action="/all" class="blog_button">
+    <input type="submit" value="See All"/>
+</form>
+
+{% endblock %}

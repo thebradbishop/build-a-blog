@@ -12,7 +12,10 @@ class Blog(db.Model):
     title = db.StringProperty(required = True)
     entry_blog = db.StringProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
-    read = db.BooleanProperty(required = True, default = False)
+
+#def blog_id(self):
+#    blog = db.GqlQuery("SELECT __key__ FROM Blog WHERE created = '2017-02-18 02:26:49'")
+#    return blog
 
 class Handler(webapp2.RequestHandler):
     """ A base RequestHandler class for our app.
@@ -29,14 +32,18 @@ class MainHandler(Handler):
     def get(self):
         blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
         t = jinja_env.get_template("front_page.html")
-        content = t.render(blogs=blogs)
+        content = t.render(
+                    blogs=blogs,
+                    )
         self.response.write(content)
 
 class RecentBlogs(Handler):
     def get(self):
         blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
         t = jinja_env.get_template("front_page.html")
-        content = t.render(blogs=blogs)
+        content = t.render(
+                    blogs=blogs
+                    )
         self.response.write(content)
 
 class NewPost(Handler):
@@ -75,9 +82,24 @@ class AllBlogs(Handler):
         content = t.render(blogs=blogs)
         self.response.write(content)
 
+class ViewPostHandler(Handler):
+    def get(self, id):
+        blogs = db.GqlQuery("SELECT * FROM Blog where __key__ = {}".format(id))
+        blog = Blog.get_by_id(int(id))
+        bloglink = "/blog/{}".format(blog)
+        t = jinja_env.get_template("blog.html")
+        content = t.render(
+                    blog=blog,
+                    blogs=blogs,
+                    bloglink=bloglink
+                    )
+        self.response.write(content)
+
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/newpost', NewPost),
     ('/blog', RecentBlogs),
-    ('/all', AllBlogs)
+    ('/all', AllBlogs),
+    webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 ], debug=True)
