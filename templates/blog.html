@@ -1,80 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-.error {
-    color: pink;
-}
-
-.blog_entry {
-    background-color: #4e5965;
-    border-width: -5px;
-    border-color: #a9b3bc;
-    border-style: solid;
-    position: auto;
-    top: 50%;
-    left: 50%;
-    width: 800px;
-    height: auto;
-    margin: auto;
-}
-
-.add_blog {
-    background-color: #4e5965;
-    border-width: -5px;
-    border-color: #a9b3bc;
-    border-style: solid;
-    border-spacing: 1% 2em;
-    position: auto;
-    top: 50%;
-    left: 50%;
-    width: 800px;
-    height: auto;
-    margin: auto;
-}
-
-.blog_button {
-    position: auto;
-    top: 50%;
-    left: 50%;
-    width: 800px;
-    height: auto;
-    margin: auto;
-}
-
-body {
-    background: #708090;
-    font-family: "Source Sans Pro", sans-serif; color: white;
-    font-size: 15px;
-    font-weight: 300;
-    margin-left: center;
-}
-
-a:link {
-    color: #4e5965;
-    background-color: transparent;
-    text-decoration: none
-}
-
-a:visited {
-    color: #4e5965;
-    background-color: transparent;
-    text-decoration: none
-}
-
-a:hover {
-    color: pink;
-    background-color: transparent;
-    text-decoration: none
-}
-
-a:active {
-    color: #4e5965;
-    background-color: transparent;
-    text-decoration: underline
-}
-</style>
-
 <br>
 <br>
 <br>
@@ -99,7 +25,7 @@ a:active {
 {% endif %}
 
 <form action="/all" class="blog_button">
-    <input type="submit" value="See All"/>
+    <input type="submit" value="See All" style ="color:#708090"/>
 </form>
 
 {% endblock %}
