@@ -1,17 +1,16 @@
 {% extends "base.html" %}
-
 {% block content %}
 <br>
 <br>
 <br>
-{% if blogs: %}
+{% if blog %}
     <p class="blog_entry">
         <label>Title:
-        <a href="/">{{ blog.title }}</a>
+        <a href="{{entry}}">{{ blog.title }}</a>
         </label>
         <br>
         <label>Date:
-        {{ blog.created }}
+        {{ blog.created.strftime("%b, %d, %Y") }}
         </label>
         <br>
         <br>
@@ -21,11 +20,9 @@
     </p>
 <br>
 <br>
-
 {% endif %}
-
-<form action="/all" class="blog_button">
-    <input type="submit" value="See All" style ="color:#708090"/>
+<form action="/" class="blog_button">
+    <input type="submit" value="Back to Main" style ="color:#708090"/>
 </form>
 
 {% endblock %}

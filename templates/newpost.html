@@ -3,25 +3,27 @@
 {% block content %}
 
 </style>
-
 <br>
 <br>
 <br>
 <br>
 <form action="/newpost" method="post" class="add_blog">
     <label>
+        <div style="margin: 10px 20px">Title:</div>
+        <input type="text" name="title" value="{{ title }}" style="margin: 20px; width: 250px;">
         <br>
-        Title:
-        <input type="text" name="title" value="{{ title }}"> <text class="error">{{ error_title if error_title else "" }}</text>
+        <text class="error" style="margin: 10px 20px">{{ error_title if error_title else "" }}</text>
         <br>
         <br>
     </label>
-        Add a new blog entry:
-        <input type="text" name="entry_blog" value="{{ entry_blog }}" size="50px" /> <text class="error">{{ error_entry if error_entry else "" }}</text>
+    <label>
+        <div style="margin: 10px 20px">Entry:</div>
+        <textarea name="entry_blog" value="{{ entry_blog }}" size="" style="margin: 20px; width: 750px; height: 225px;"></textarea>
+        <text class="error" style="margin: 20px">{{ error_entry if error_entry else "" }}</text>
     </label>
     <br>
     <br>
-    <input type="submit" value="Add it to My Blog" style ="color:#708090"/>
+    <input type="submit" value="Add it to My Blog" style ="color:#708090; margin: 10px 20px"/>
 </form>
 
 {% endblock %}

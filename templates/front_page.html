@@ -4,28 +4,29 @@
 <br>
 <br>
 <br>
-{% for entry in blogs %}
+
+{% for blog in blogs %}
     <p class="blog_entry">
         <label>Title:
-        <a href="/">{{ entry.title }}</a>
+        <a href='/blog/{{blog.key().id()}}'>{{ blog.title }}</a>
         </label>
         <br>
         <label>Date:
-        {{ entry.created }}
+        {{ blog.created.strftime("%b, %d, %Y") }}
         </label>
         <br>
         <br>
         <label>
-        {{ entry.entry_blog }}
+        {{ blog.entry_blog }}
         </label>
     </p>
 <br>
 <br>
-
 {% endfor %}
-
-<form action="/all" class="blog_button">
-    <input type="submit" value="See All" style ="color:#708090"/>
-</form>
-
+{% if page %}
+<div align="center">
+    <button style="color:#708090"><a href='blog?page={{page}}'>Previous</a></button>
+{{ page | safe }}
+</div>
+{% endif %}
 {% endblock %}

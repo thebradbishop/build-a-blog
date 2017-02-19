@@ -8,14 +8,18 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
+def blog_key(name='default'):
+    return db.Key.from_path('blogs', name)
+
+def get_posts(limit, offset):
+    blogs = Blog.all().order('-created').run(limit=limit,offset=offset)
+    return blogs
+
+
 class Blog(db.Model):
     title = db.StringProperty(required = True)
-    entry_blog = db.StringProperty(required = True)
+    entry_blog = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
-
-#def blog_id(self):
-#    blog = db.GqlQuery("SELECT __key__ FROM Blog WHERE created = '2017-02-18 02:26:49'")
-#    return blog
 
 class Handler(webapp2.RequestHandler):
     """ A base RequestHandler class for our app.
@@ -30,20 +34,34 @@ class Handler(webapp2.RequestHandler):
 
 class MainHandler(Handler):
     def get(self):
-        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
+        limit = self.request.get('limit')
+        offset = self.request.get('offset')
+        if limit == '':
+            limit = 5
+            offset = 0
+        blogs = get_posts(limit,offset)
         t = jinja_env.get_template("front_page.html")
-        content = t.render(
-                    blogs=blogs,
-                    )
+        content = t.render(blogs=blogs)
         self.response.write(content)
 
 class RecentBlogs(Handler):
     def get(self):
-        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
+        page=self.request.get('page')
+        if page == '':
+            page = 0
+        count = Blog.all().count()
+        limit = 5
+        offset = int(page) * 5
+        blogs = get_posts(limit,offset)
+
+        #if page >= 2:
+        #    page = """
+        #    <button style="color:#708090"><a href='/blog?page={}'>Previous</a></button>&nbsp;&nbsp;{}&nbsp;
+        #    <button style="color:#708090"><a href='/blog?page={}'>Next</a></button>
+        #    """.format(page)
+            #('blog/%s' %str(b.key().id()))
         t = jinja_env.get_template("front_page.html")
-        content = t.render(
-                    blogs=blogs
-                    )
+        content = t.render(blogs=blogs, page=page, count=count)
         self.response.write(content)
 
 class NewPost(Handler):
@@ -70,29 +88,30 @@ class NewPost(Handler):
         self.redirect("/newpost?title={0}&entry_blog={1}&error_title={2}&error_entry={3}".format(title,entry_blog,error_title,error_entry))
 
         if title and entry_blog:
-            b = Blog(title=title, entry_blog=entry_blog)
+            b = Blog(parent=blog_key(), title=title, entry_blog=entry_blog)
             b.put()
 
-            self.redirect("/blog")
+            self.redirect('blog/%s' %str(b.key().id()))
 
 class AllBlogs(Handler):
     def get(self):
-        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc")
+        blogs = Blog.all().order('-created')
         t = jinja_env.get_template("front_page.html")
         content = t.render(blogs=blogs)
         self.response.write(content)
 
 class ViewPostHandler(Handler):
     def get(self, id):
-        blogs = db.GqlQuery("SELECT * FROM Blog where __key__ = {}".format(id))
-        blog = Blog.get_by_id(int(id))
-        bloglink = "/blog/{}".format(blog)
+        key = db.Key.from_path('Blog', int(id), parent=blog_key())
+        blog = db.get(key)
+        entry = id
+        if not blog:
+            t = jinja_env.get_template("error.html")
+            content = t.render()
+            self.response.write(content)
+            return
         t = jinja_env.get_template("blog.html")
-        content = t.render(
-                    blog=blog,
-                    blogs=blogs,
-                    bloglink=bloglink
-                    )
+        content = t.render(blog=blog,entry=entry)
         self.response.write(content)
 
 
