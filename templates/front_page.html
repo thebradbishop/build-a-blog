@@ -21,12 +21,23 @@
         </label>
     </p>
 <br>
-<br>
 {% endfor %}
-{% if page %}
-<div align="center">
-    <button style="color:#708090"><a href='blog?page={{page}}'>Previous</a></button>
-{{ page | safe }}
+<style>
+div {
+    width: 800px;
+    height: auto;
+    margin: auto;
+}
+</style>
+<div>
+    {% if page %}
+    <p>Page: {{page}}</p>
+    {% endif %}
+    {% if previous_page %}
+        <button style="color:#708090"><a href='blog?page={{ previous_page | safe }}'>Previous</a></button>
+    {% endif %}
+    {% if next_page %}
+        <button style="color:#708090"><a href='blog?page={{ next_page | safe }}'>Next</a></button>
+    {% endif %}
 </div>
-{% endif %}
 {% endblock %}

@@ -46,22 +46,26 @@ class MainHandler(Handler):
 
 class RecentBlogs(Handler):
     def get(self):
-        page=self.request.get('page')
-        if page == '':
-            page = 0
         count = Blog.all().count()
         limit = 5
-        offset = int(page) * 5
+        offset = 0
+        page=self.request.get('page')
+        if page == '' or page == '1':
+            page = 1
+        if page > 1:
+            offset = (int(page)*5)-5
+        if count % limit == 0:
+            pages = count/limit
+        else:
+            pages = (count/limit)+1
+        page_count = range(1, pages+1, 1)
         blogs = get_posts(limit,offset)
-
-        #if page >= 2:
-        #    page = """
-        #    <button style="color:#708090"><a href='/blog?page={}'>Previous</a></button>&nbsp;&nbsp;{}&nbsp;
-        #    <button style="color:#708090"><a href='/blog?page={}'>Next</a></button>
-        #    """.format(page)
-            #('blog/%s' %str(b.key().id()))
+        next_page = int(page) + 1
+        previous_page = int(page) - 1
+        if int(page) == int(pages):
+            next_page = 0
         t = jinja_env.get_template("front_page.html")
-        content = t.render(blogs=blogs, page=page, count=count)
+        content = t.render(blogs=blogs, page=page, page_count=page_count, next_page=next_page, previous_page=previous_page, pages=pages)
         self.response.write(content)
 
 class NewPost(Handler):
